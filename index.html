@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>SunuBank Pro · Sénégal</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        :root {
+            --vert-sn: #00853F;
+            --jaune-sn: #FDEF42;
+            --rouge-sn: #E31B23;
+            --blanc: #FFFFFF;
+            --gris-clair: #F8FAFC;
+            --gris-moyen: #E2E8F0;
+            --gris-fonce: #1E293B;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 133, 63, 0.15);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Mode sombre */
+        body.dark-mode {
+            --vert-sn: #00A85E;
+            --jaune-sn: #FFE55C;
+            --rouge-sn: #FF6B6B;
+            --blanc: #1A1E2A;
+            --gris-clair: #2D313E;
+            --gris-moyen: #3A3F4E;
+            --gris-fonce: #F1F5F9;
+            background: #0F1219;
+        }
+
+        body.dark-mode .phone-mockup {
+            background: #1A1E2A;
+            border-color: #2D313E;
+        }
+
+        body.dark-mode .auth-form,
+        body.dark-mode .account-summary,
+        body.dark-mode .menu-card,
+        body.dark-mode .action-panel,
+        body.dark-mode .stat-card,
+        body.dark-mode .compte-card,
+        body.dark-mode .transaction-item,
+        body.dark-mode .chat-container,
+        body.dark-mode .virtual-card {
+            background: #242835;
+            color: var(--gris-fonce);
+            border-color: #3A3F4E;
+        }
+
+        body {
+            background: linear-gradient(145deg, #EFF3F8 0%, #E2E8F0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            transition: var(--transition);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-fade-up { animation: fadeInUp 0.4s ease forwards; }
+        .animate-scale { animation: scaleIn 0.3s ease forwards; }
+        .animate-slide-right { animation: slideInRight 0.3s ease forwards; }
+
+        /* Structure principale */
+        .phone-mockup {
+            max-width: 420px;
+            width: 100%;
+            background: var(--blanc);
+            border-radius: 40px 40px 32px 32px;
+            box-shadow: var(--shadow-lg), 0 0 0 2px var(--jaune-sn);
+            overflow: hidden;
+            transition: var(--transition);
+            height: 760px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Bandeau drapeau */
+        .flag-strip {
+            display: flex;
+            height: 6px;
+            width: 100%;
+        }
+        .flag-strip .green { flex: 1; background: var(--vert-sn); }
+        .flag-strip .yellow { flex: 1; background: var(--jaune-sn); }
+        .flag-strip .red { flex: 1; background: var(--rouge-sn); }
+        .flag-strip .white { flex: 1; background: var(--blanc); }
+
+        /* Header */
+        .app-header {
+            padding: 16px 20px;
+            background: var(--blanc);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid rgba(0,133,63,0.1);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            background: var(--vert-sn);
+            width: 44px;
+            height: 44px;
+            border-radius: 22px 6px 22px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--jaune-sn);
+            font-size: 24px;
+            transition: var(--transition);
+        }
+
+        .logo-icon:hover { transform: rotate(5deg) scale(1.05); }
+
+        .logo-text h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--vert-sn) 0%, #0b5e2e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--rouge-sn);
+            background: rgba(227,27,35,0.1);
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-toggle, .notif-toggle {
+            background: var(--gris-clair);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gris-fonce);
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover, .notif-toggle:hover {
+            background: var(--vert-sn);
+            color: white;
+            transform: rotate(15deg);
+        }
+
+        .user-badge {
+            background: var(--jaune-sn);
+            border-radius: 40px;
+            padding: 6px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--gris-fonce);
+            border: 2px solid var(--vert-sn);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .user-badge:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+        /* Scroll area */
+        .view-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: var(--gris-clair);
+            transition: var(--transition);
+            scrollbar-width: thin;
+            scrollbar-color: var(--vert-sn) var(--gris-moyen);
+        }
+
+        .view-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .view-container::-webkit-scrollbar-track {
+            background: var(--gris-moyen);
+        }
+        .view-container::-webkit-scrollbar-thumb {
+            background: var(--vert-sn);
+            border-radius: 4px;
+        }
+
+        /* Auth */
+        .auth-tabs {
+            display: flex;
+            gap: 8px;
+            background: var(--blanc);
+            padding: 8px;
+            border-radius: 40px;
+            margin-bottom: 24px;
+            border: 1px solid var(--gris-moyen);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            font-weight: 600;
+            border-radius: 32px;
+            background: transparent;
+            border: none;
+            color: var(--gris-fonce);
+            transition: var(--transition);
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .auth-tab.active {
+            background: var(--vert-sn);
+            color: white;
+        }
+
+        .auth-form {
+            background: var(--blanc);
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gris-moyen);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--rouge-sn);
+            margin-bottom: 6px;
+            margin-left: 16px;
+        }
+
+        .input-icon {
+            display: flex;
+            align-items: center;
+            background: var(--gris-clair);
+            border: 2px solid var(--gris-moyen);
+            border-radius: 40px;
+            padding: 0 16px;
+            transition: var(--transition);
+        }
+
+        .input-icon i {
+            color: var(--vert-sn);
+            font-size: 1rem;
+            width: 20px;
+        }
+
+        .input-icon input, .input-icon select {
+            width: 100%;
+            padding: 14px 8px;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            outline: none;
+            color: var(--gris-fonce);
+        }
+
+        .input-icon:focus-within {
+            border-color: var(--vert-sn);
+            box-shadow: 0 0 0 3px rgba(0,133,63,0.2);
+        }
+
+        .password-toggle {
+            cursor: pointer;
+            color: var(--gris-fonce);
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--vert-sn);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 16px;
+            border-radius: 40px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: 2px solid var(--jaune-sn);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--rouge-sn);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* Dashboard */
+        .welcome-card {
+            background: linear-gradient(135deg, var(--vert-sn) 0%, #0f6d3a 100%);
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 56px;
+            background: var(--jaune-sn);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--vert-sn);
+            border: 3px solid white;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--blanc);
+            border-radius: 20px;
+            padding: 16px 8px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--vert-sn);
+        }
+
+        .stat-card i {
+            font-size: 1.4rem;
+            color: var(--vert-sn);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--gris-fonce);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--gris-fonce);
+            opacity: 0.7;
+        }
+
+        /* Comptes carousel */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0 12px;
+            color: var(--gris-fonce);
+            font-size: 1rem;
+        }
+
+        .comptes-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 4px 0 16px;
+            scroll-snap-type: x mandatory;
+        }
+
+        .compte-mini-card {
+            min-width: 200px;
+            background: linear-gradient(145deg, var(--vert-sn), #0f6d3a);
+            border-radius: 24px;
+            padding: 18px;
+            color: white;
+            scroll-snap-align: start;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .compte-mini-card.active {
+            border-color: var(--jaune-sn);
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(253,239,66,0.3);
+        }
+
+        .compte-mini-card .type {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+
+        .compte-mini-card .code {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 4px 0;
+        }
+
+        .compte-mini-card .solde {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge.actif {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        /* Menu actions */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .menu-item {
+            background: var(--blanc);
+            border-radius: 20px;
+            padding: 14px 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--gris-moyen);
+        }
+
+        .menu-item i {
+            font-size: 1.4rem;
+            color: var(--vert-sn);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .menu-item span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--gris-fonce);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--vert-sn);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Action panel */
+        .action-panel {
+            background: var(--blanc);
+            border-radius: 28px;
+            padding: 20px;
+            margin: 16px 0;
+            border: 2px solid var(--jaune-sn);
+        }
+
+        .action-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--vert-sn);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Transactions */
+        .transactions-list {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .transaction-row {
+            background: var(--gris-clair);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid transparent;
+        }
+
+        .transaction-row.depot { border-left-color: var(--vert-sn); }
+        .transaction-row.retrait { border-left-color: var(--rouge-sn); }
+        .transaction-row.virement { border-left-color: var(--jaune-sn); }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            background: var(--blanc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--vert-sn);
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-type {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--gris-fonce);
+        }
+
+        .transaction-date {
+            font-size: 0.65rem;
+            color: var(--gris-fonce);
+            opacity: 0.6;
+        }
+
+        .transaction-amount {
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .transaction-amount.positif { color: var(--vert-sn); }
+        .transaction-amount.negatif { color: var(--rouge-sn); }
+
+        /* Notifications */
+        .notif-container {
+            position: fixed;
+            top: 70px;
+            right: 16px;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .notif-toast {
+            background: var(--vert-sn);
+            color: white;
+            padding: 16px;
+            border-radius: 24px;
+            margin-bottom: 8px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.3s ease;
+            border-left: 6px solid var(--jaune-sn);
+        }
+
+        .notif-toast i { font-size: 1.2rem; }
+
+        /* Pin overlay */
+        .pin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(4px);
+        }
+
+        .pin-modal {
+            background: var(--blanc);
+            border-radius: 32px;
+            padding: 24px;
+            width: 280px;
+            text-align: center;
+        }
+
+        .pin-dots {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 16px;
+            background: var(--gris-moyen);
+            transition: var(--transition);
+        }
+
+        .pin-dot.filled { background: var(--vert-sn); }
+
+        .pin-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .pin-key {
+            aspect-ratio: 1;
+            border-radius: 40px;
+            border: none;
+            background: var(--gris-clair);
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pin-key:hover {
+            background: var(--vert-sn);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Logout */
+        .logout-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 2px solid var(--rouge-sn);
+            color: var(--rouge-sn);
+            border-radius: 40px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: var(--rouge-sn);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 360px) {
+            .menu-grid { grid-template-columns: repeat(3, 1fr); }
+            .stats-grid { gap: 4px; }
+            .stat-card { padding: 12px 4px; }
+            .stat-value { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="phone-mockup">
+    <div class="flag-strip">
+        <div class="green"></div>
+        <div class="yellow"></div>
+        <div class="red"></div>
+        <div class="white"></div>
+    </div>
+
+    <div class="app-header">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fas fa-university"></i></div>
+            <div class="logo-text">
+                <h1>SunuBank</h1>
+                <span>SÉNÉGAL</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="notif-toggle" id="notifToggle"><i class="fas fa-bell"></i></button>
+            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+            <div class="user-badge" id="userBadge" style="display: none;">
+                <i class="fas fa-user-circle"></i> <span id="displayUserName">...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="view-container" id="viewContainer"></div>
+    <div class="notif-container" id="notifContainer"></div>
+</div>
+
+<script>
+    (function() {
+        // =============== CLASSES ===============
+        class Notification {
+            constructor(message, type = 'info') {
+                this.id = Date.now() + Math.random();
+                this.message = message;
+                this.type = type;
+                this.date = new Date();
+            }
+        }
+
+        class Transaction {
+            constructor(type, montant, description = '', compteSource = null, compteDest = null) {
+                this.type = type;
+                this.montant = montant;
+                this.description = description;
+                this.date = new Date().toLocaleString('fr-FR');
+                this.compteSource = compteSource;
+                this.compteDest = compteDest;
+                this.id = Date.now() + Math.random();
+            }
+        }
+
+        class CarteVirtuelle {
+            constructor(compteId) {
+                this.numero = this.genererNumero();
+                this.dateExpiration = this.genererDateExpiration();
+                this.cvv = Math.floor(100 + Math.random() * 900);
+                this.plafond = 500000;
+                this.actif = true;
+                this.compteId = compteId;
+            }
+
+            genererNumero() { return '4' + Array(15).fill(0).map(() => Math.floor(Math.random() * 10)).join(''); }
+            genererDateExpiration() {
+                const d = new Date();
+                d.setFullYear(d.getFullYear() + 3);
+                return `${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear().toString().slice(-2)}`;
+            }
+        }
+
+        class Budget {
+            constructor(categorie, montantMax) {
+                this.categorie = categorie;
+                this.montantMax = montantMax;
+                this.depenses = 0;
+            }
+            get pourcentage() { return (this.depenses / this.montantMax) * 100; }
+        }
+
+        class Compte {
+            constructor(code = '', solde = 0, type = 'courant', etat = true) {
+                this.code = code;
+                this.solde = solde;
+                this.type = type;
+                this.etat = etat;
+                this.transactions = [];
+                this.carteVirtuelle = null;
+            }
+
+            effectuerDepot(montant, description = 'Dépôt') {
+                if (!this.etat) return {ok: false, msg: "Compte désactivé"};
+                if (isNaN(montant) || montant <= 0) return {ok: false, msg: "Montant invalide"};
+                this.solde += montant;
+                const t = new Transaction('depot', montant, description, this);
+                this.transactions.unshift(t);
+                return {ok: true, msg: `Dépôt de ${montant} F CFA effectué`, transaction: t};
+            }
+
+            effectuerRetrait(montant, description = 'Retrait') {
+                if (!this.etat) return {ok: false, msg: "Compte désactivé"};
+                if (isNaN(montant) || montant <= 0) return {ok: false, msg: "Montant invalide"};
+                if (montant > this.solde) return {ok: false, msg: "Solde insuffisant"};
+                this.solde -= montant;
+                const t = new Transaction('retrait', montant, description, this);
+                this.transactions.unshift(t);
+                return {ok: true, msg: `Retrait de ${montant} F CFA effectué`, transaction: t};
+            }
+
+            desactiver() {
+                if (!this.etat) return {ok: false, msg: "Compte déjà inactif"};
+                this.etat = false;
+                return {ok: true, msg: "Compte désactivé"};
+            }
+
+            creerCarte() {
+                if (this.carteVirtuelle) return {ok: false, msg: "Carte déjà existante"};
+                this.carteVirtuelle = new CarteVirtuelle(this.code);
+                return {ok: true, msg: "Carte virtuelle créée", carte: this.carteVirtuelle};
+            }
+        }
+
+        class Utilisateur {
+            constructor(prenom, nom, email, motDePasse) {
+                this.prenom = prenom;
+                this.nom = nom;
+                this.email = email;
+                this.motDePasse = motDePasse;
+                this.comptes = [];
+                this.compteActifIndex = 0;
+                this.notifications = [];
+                this.budgets = [
+                    new Budget('Alimentation', 200000),
+                    new Budget('Transport', 100000),
+                    new Budget('Loisirs', 150000)
+                ];
+                this.codePIN = '0000';
+                this.biometrieActivee = false;
+                this.transactions = [];
+            }
+
+            nomComplet() { return `${this.prenom} ${this.nom}`; }
+            get compteActif() { return this.comptes[this.compteActifIndex] || null; }
+
+            ajouterCompte(compte) {
+                this.comptes.push(compte);
+                if (this.comptes.length === 1) this.compteActifIndex = 0;
+            }
+
+            ajouterNotification(message, type = 'info') {
+                const notif = new Notification(message, type);
+                this.notifications.unshift(notif);
+                return notif;
+            }
+
+            verifierPIN(pin) { return this.codePIN === pin; }
+        }
+
+        // =============== ÉTAT GLOBAL ===============
+        let utilisateurConnecte = null;
+        let utilisateurs = [];
+        let chatMessages = [
+            { sender: 'bot', text: 'Bonjour, je suis votre conseiller SunuBank. Puis-je vous aider ?' }
+        ];
+        let notificationsVisibles = [];
+
+        // =============== UTILITAIRES ===============
+        function trouverUserParEmail(email) {
+            return utilisateurs.find(u => u.email === email);
+        }
+
+        function afficherNotification(message, type = 'info') {
+            const container = document.getElementById('notifContainer');
+            const notif = document.createElement('div');
+            notif.className = 'notif-toast';
+            notif.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        function afficherPinOverlay(callback) {
+            if (!utilisateurConnecte) return callback(false);
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'pin-overlay';
+            overlay.innerHTML = `
+                <div class="pin-modal animate-scale">
+                    <i class="fas fa-lock" style="font-size: 2.5rem; color: var(--vert-sn);"></i>
+                    <h3 style="margin: 16px 0;">Code PIN requis</h3>
+                    <div class="pin-dots" id="pinDots">
+                        <span class="pin-dot"></span>
+                        <span class="pin-dot"></span>
+                        <span class="pin-dot"></span>
+                        <span class="pin-dot"></span>
+                    </div>
+                    <div class="pin-grid" id="pinGrid"></div>
+                    <div style="margin-top: 20px; display: flex; gap: 10px;">
+                        ${utilisateurConnecte.biometrieActivee ? '<button class="btn-primary" id="useBiometric" style="padding: 10px;"><i class="fas fa-fingerprint"></i> Empreinte</button>' : ''}
+                        <button class="btn-secondary" id="cancelPin" style="padding: 10px;">Annuler</button>
+                    </div>
+                </div>
+            `;
+
+            const grid = overlay.querySelector('#pinGrid');
+            for (let i = 1; i <= 9; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'pin-key';
+                btn.textContent = i;
+                grid.appendChild(btn);
+            }
+            const btn0 = document.createElement('button');
+            btn0.className = 'pin-key';
+            btn0.textContent = '0';
+            grid.appendChild(btn0);
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'pin-key';
+            clearBtn.innerHTML = '<i class="fas fa-backspace"></i>';
+            grid.appendChild(clearBtn);
+
+            let pin = '';
+            const dots = overlay.querySelectorAll('.pin-dot');
+
+            function updateDots() {
+                dots.forEach((dot, i) => {
+                    if (i < pin.length) dot.classList.add('filled');
+                    else dot.classList.remove('filled');
+                });
+            }
+
+            grid.addEventListener('click', (e) => {
+                const target = e.target.closest('.pin-key');
+                if (!target) return;
+                
+                if (target.innerHTML.includes('backspace')) {
+                    pin = pin.slice(0, -1);
+                } else if (pin.length < 4) {
+                    pin += target.textContent;
+                }
+
+                if (pin.length === 4) {
+                    if (utilisateurConnecte.verifierPIN(pin)) {
+                        document.body.removeChild(overlay);
+                        callback(true);
+                    } else {
+                        afficherNotification('Code PIN incorrect', 'error');
+                        pin = '';
+                    }
+                }
+                updateDots();
+            });
+
+            overlay.querySelector('#cancelPin').addEventListener('click', () => {
+                document.body.removeChild(overlay);
+                callback(false);
+            });
+
+            if (utilisateurConnecte.biometrieActivee) {
+                overlay.querySelector('#useBiometric')?.addEventListener('click', () => {
+                    afficherNotification('Authentification biométrique réussie', 'success');
+                    document.body.removeChild(overlay);
+                    callback(true);
+                });
+            }
+
+            document.body.appendChild(overlay);
+        }
+
+        // =============== RENDU ===============
+        const viewContainer = document.getElementById('viewContainer');
+        const userBadge = document.getElementById('userBadge');
+        const displayUserName = document.getElementById('displayUserName');
+        const themeToggle = document.getElementById('themeToggle');
+        const notifToggle = document.getElementById('notifToggle');
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        notifToggle.addEventListener('click', () => {
+            if (utilisateurConnecte) {
+                afficherNotification(`Vous avez ${utilisateurConnecte.notifications.length} notification(s)`, 'info');
+            }
+        });
+
+        function miseAJourUI() {
+            if (utilisateurConnecte) {
+                userBadge.style.display = 'flex';
+                displayUserName.innerText = utilisateurConnecte.prenom;
+                renderDashboard();
+            } else {
+                userBadge.style.display = 'none';
+                renderAuth();
+            }
+        }
+
+        // =============== AUTH ===============
+        function renderAuth() {
+            viewContainer.innerHTML = `
+                <div class="animate-fade-up">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" id="tabLogin"><i class="fas fa-sign-in-alt"></i> Connexion</button>
+                        <button class="auth-tab" id="tabRegister"><i class="fas fa-user-plus"></i> Inscription</button>
+                    </div>
+                    <div id="authFormContainer" class="auth-form"></div>
+                </div>
+            `;
+
+            document.getElementById('tabLogin').addEventListener('click', () => {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('tabLogin').classList.add('active');
+                renderLoginForm();
+            });
+
+            document.getElementById('tabRegister').addEventListener('click', () => {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.getElementById('tabRegister').classList.add('active');
+                renderRegisterForm();
+            });
+
+            renderLoginForm();
+        }
+
+        function renderLoginForm() {
+            const container = document.getElementById('authFormContainer');
+            container.innerHTML = `
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="loginEmail" placeholder="exemple@sunubank.sn" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Mot de passe</label>
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" placeholder="••••••••" required>
+                            <i class="fas fa-eye password-toggle" id="toggleLoginPassword"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary"><i class="fas fa-arrow-right-to-bracket"></i> Se connecter</button>
+                </form>
+            `;
+
+            document.getElementById('toggleLoginPassword')?.addEventListener('click', function() {
+                const input = document.getElementById('loginPassword');
+                input.type = input.type === 'password' ? 'text' : 'password';
+                this.className = input.type === 'password' ? 'fas fa-eye password-toggle' : 'fas fa-eye-slash password-toggle';
+            });
+
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const pwd = document.getElementById('loginPassword').value;
+                const user = utilisateurs.find(u => u.email === email && u.motDePasse === pwd);
+                
+                if (user) {
+                    utilisateurConnecte = user;
+                    utilisateurConnecte.ajouterNotification('Connexion réussie', 'success');
+                    afficherNotification('Connexion réussie', 'success');
+                    miseAJourUI();
+                } else {
+                    afficherNotification('Identifiants incorrects', 'error');
+                }
+            });
+        }
+
+        function renderRegisterForm() {
+            const container = document.getElementById('authFormContainer');
+            container.innerHTML = `
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Prénom</label>
+                        <div class="input-icon"><i class="fas fa-user"></i><input type="text" id="regPrenom" required></div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-user-tag"></i> Nom</label>
+                        <div class="input-icon"><i class="fas fa-user-tag"></i><input type="text" id="regNom" required></div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <div class="input-icon"><i class="fas fa-envelope"></i><input type="email" id="regEmail" required></div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Mot de passe</label>
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="regPassword" required>
+                            <i class="fas fa-eye password-toggle" id="toggleRegPassword"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-key"></i> Code PIN (4 chiffres)</label>
+                        <div class="input-icon">
+                            <i class="fas fa-key"></i>
+                            <input type="password" id="regPIN" maxlength="4" pattern="[0-9]{4}" required>
+                            <i class="fas fa-eye password-toggle" id="toggleRegPIN"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-fingerprint"></i> Biométrie</label>
+                        <div class="input-icon">
+                            <i class="fas fa-fingerprint"></i>
+                            <select id="regBio">
+                                <option value="true">Activer</option>
+                                <option value="false">Désactiver</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary"><i class="fas fa-user-check"></i> Créer mon compte</button>
+                </form>
+            `;
+
+            document.getElementById('toggleRegPassword')?.addEventListener('click', function() {
+                const input = document.getElementById('regPassword');
+                input.type = input.type === 'password' ? 'text' : 'password';
+                this.className = input.type === 'password' ? 'fas fa-eye password-toggle' : 'fas fa-eye-slash password-toggle';
+            });
+
+            document.getElementById('toggleRegPIN')?.addEventListener('click', function() {
+                const input = document.getElementById('regPIN');
+                input.type = input.type === 'password' ? 'text' : 'password';
+                this.className = input.type === 'password' ? 'fas fa-eye password-toggle' : 'fas fa-eye-slash password-toggle';
+            });
+
+            document.getElementById('registerForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const prenom = document.getElementById('regPrenom').value;
+                const nom = document.getElementById('regNom').value;
+                const email = document.getElementById('regEmail').value;
+                const pwd = document.getElementById('regPassword').value;
+                const pin = document.getElementById('regPIN').value;
+                const bio = document.getElementById('regBio').value === 'true';
+
+                if (trouverUserParEmail(email)) {
+                    afficherNotification('Email déjà utilisé', 'error');
+                    return;
+                }
+
+                const nouvelUser = new Utilisateur(prenom, nom, email, pwd);
+                nouvelUser.codePIN = pin;
+                nouvelUser.biometrieActivee = bio;
+                
+                const compteDefault = new Compte('SN' + Math.floor(1000 + Math.random() * 9000), 50000, 'courant', true);
+                nouvelUser.ajouterCompte(compteDefault);
+                
+                utilisateurs.push(nouvelUser);
+                afficherNotification('Inscription réussie ! Connectez-vous.', 'success');
+                document.getElementById('tabLogin').click();
+            });
+        }
+
+        // =============== DASHBOARD ===============
+        function renderDashboard() {
+            const user = utilisateurConnecte;
+            const compte = user.compteActif;
+            
+            if (!compte) {
+                viewContainer.innerHTML = `
+                    <div class="animate-fade-up">
+                        <div class="welcome-card">
+                            <div class="avatar">${user.prenom.charAt(0)}${user.nom.charAt(0)}</div>
+                            <div>
+                                <h3>${user.nomComplet()}</h3>
+                                <p><i class="fas fa-map-marker-alt"></i> Dakar, Sénégal</p>
+                            </div>
+                        </div>
+                        <div class="action-panel" style="text-align: center;">
+                            <i class="fas fa-piggy-bank" style="font-size: 3rem; color: var(--vert-sn);"></i>
+                            <h3 style="margin: 16px 0; color: var(--rouge-sn);">Aucun compte bancaire</h3>
+                            <button class="btn-primary" id="creerPremierCompte"><i class="fas fa-plus-circle"></i> Créer mon compte</button>
+                        </div>
+                        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+                    </div>
+                `;
+
+                document.getElementById('creerPremierCompte')?.addEventListener('click', () => {
+                    const nouveauCompte = new Compte('SN' + Math.floor(1000 + Math.random() * 9000), 10000, 'courant', true);
+                    user.ajouterCompte(nouveauCompte);
+                    user.ajouterNotification('Compte créé avec succès', 'success');
+                    afficherNotification('Compte créé', 'success');
+                    miseAJourUI();
+                });
+
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    utilisateurConnecte = null;
+                    miseAJourUI();
+                });
+                return;
+            }
+
+            const totalSolde = user.comptes.reduce((sum, c) => sum + c.solde, 0);
+            const totalTransactions = user.transactions.length;
+            const depensesMois = user.transactions
+                .filter(t => t.type === 'retrait' || t.type === 'virement')
+                .reduce((sum, t) => sum + t.montant, 0);
+
+            let html = `
+                <div class="animate-fade-up">
+                    <div class="welcome-card">
+                        <div class="avatar">${user.prenom.charAt(0)}${user.nom.charAt(0)}</div>
+                        <div>
+                            <h3>${user.nomComplet()}</h3>
+                            <p><i class="fas fa-shield-alt"></i> Compte sécurisé</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-wallet"></i>
+                            <div class="stat-value">${totalSolde.toLocaleString()} F</div>
+                            <div class="stat-label">Solde total</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-exchange-alt"></i>
+                            <div class="stat-value">${totalTransactions}</div>
+                            <div class="stat-label">Transactions</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-chart-line"></i>
+                            <div class="stat-value">${depensesMois.toLocaleString()} F</div>
+                            <div class="stat-label">Dépenses mois</div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">
+                        <i class="fas fa-credit-card" style="color: var(--vert-sn);"></i>
+                        <span>Mes comptes</span>
+                    </div>
+                    <div class="comptes-scroll" id="comptesScroll">
+                        ${user.comptes.map((c, idx) => `
+                            <div class="compte-mini-card ${idx === user.compteActifIndex ? 'active' : ''}" data-index="${idx}">
+                                <div class="type">${c.type.toUpperCase()}</div>
+                                <div class="code">${c.code}</div>
+                                <div class="solde">${c.solde.toLocaleString()} F</div>
+                                <span class="badge actif"><i class="fas fa-circle"></i> ${c.etat ? 'ACTIF' : 'INACTIF'}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+            `;
+
+            // Graphique
+            html += `
+                <div style="background: var(--blanc); border-radius: 24px; padding: 16px; margin: 16px 0;">
+                    <canvas id="evolutionChart" style="height: 160px; width: 100%;"></canvas>
+                </div>
+            `;
+
+            // Menu actions
+            html += `
+                <div class="menu-grid">
+                    <div class="menu-item" data-action="depot"><i class="fas fa-arrow-down"></i><span>Dépôt</span></div>
+                    <div class="menu-item" data-action="retrait"><i class="fas fa-arrow-up"></i><span>Retrait</span></div>
+                    <div class="menu-item" data-action="virement"><i class="fas fa-exchange-alt"></i><span>Virement</span></div>
+                    <div class="menu-item" data-action="carte"><i class="fas fa-credit-card"></i><span>Carte</span></div>
+                    <div class="menu-item" data-action="historique"><i class="fas fa-history"></i><span>Historique</span></div>
+                    <div class="menu-item" data-action="budget"><i class="fas fa-chart-pie"></i><span>Budget</span></div>
+                    <div class="menu-item" data-action="chat"><i class="fas fa-headset"></i><span>Support</span></div>
+                    <div class="menu-item" data-action="securite"><i class="fas fa-shield-alt"></i><span>Sécurité</span></div>
+                </div>
+
+                <div class="action-panel" id="actionPanel">
+                    <div class="action-title" id="actionTitle">
+                        <i class="fas fa-hand-holding-usd"></i> Opérations
+                    </div>
+                    <div id="actionContent" class="animate-scale">
+                        <p style="color: var(--gris-fonce); opacity: 0.7; text-align: center;">Sélectionnez une opération</p>
+                    </div>
+                </div>
+
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+            `;
+
+            viewContainer.innerHTML = html;
+
+            // Initialiser le graphique
+            setTimeout(() => {
+                const ctx = document.getElementById('evolutionChart')?.getContext('2d');
+                if (ctx) {
+                    const soldes = [];
+                    for (let i = 6; i >= 0; i--) {
+                        soldes.push(compte.solde - (Math.random() * 20000));
+                    }
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                            datasets: [{
+                                data: soldes,
+                                borderColor: '#00853F',
+                                backgroundColor: 'rgba(0,133,63,0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: { y: { beginAtZero: false } }
+                        }
+                    });
+                }
+            }, 100);
+
+            // Événements
+            document.querySelectorAll('.compte-mini-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const index = parseInt(card.dataset.index);
+                    user.compteActifIndex = index;
+                    miseAJourUI();
+                });
+            });
+
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const action = item.dataset.action;
+                    handleAction(action);
+                });
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                utilisateurConnecte = null;
+                miseAJourUI();
+            });
+        }
+
+        // =============== GESTION DES ACTIONS ===============
+        function handleAction(action) {
+            const content = document.getElementById('actionContent');
+            const title = document.getElementById('actionTitle');
+            const user = utilisateurConnecte;
+            const compte = user.compteActif;
+
+            if (!compte) return;
+
+            // Réinitialiser le contenu
+            content.innerHTML = '';
+
+            switch(action) {
+                case 'depot':
+                    title.innerHTML = '<i class="fas fa-arrow-down"></i> Dépôt';
+                    content.innerHTML = `
+                        <div class="form-group">
+                            <label>Montant (F CFA)</label>
+                            <div class="input-icon">
+                                <i class="fas fa-coins"></i>
+                                <input type="number" id="montantDepot" min="100" value="10000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <div class="input-icon">
+                                <i class="fas fa-pen"></i>
+                                <input type="text" id="descDepot" placeholder="Ex: Dépôt espèces">
+                            </div>
+                        </div>
+                        <button class="btn-primary" id="execDepot"><i class="fas fa-check"></i> Effectuer le dépôt</button>
+                    `;
+
+                    document.getElementById('execDepot').addEventListener('click', () => {
+                        afficherPinOverlay((valide) => {
+                            if (valide) {
+                                const montant = parseFloat(document.getElementById('montantDepot').value);
+                                const desc = document.getElementById('descDepot').value || 'Dépôt';
+                                const res = compte.effectuerDepot(montant, desc);
+                                if (res.ok) {
+                                    user.transactions.unshift(res.transaction);
+                                    user.ajouterNotification(`Dépôt de ${montant} F CFA effectué`, 'success');
+                                    afficherNotification(`Dépôt de ${montant} F CFA réussi`, 'success');
+                                    miseAJourUI();
+                                } else {
+                                    afficherNotification(res.msg, 'error');
+                                }
+                            }
+                        });
+                    });
+                    break;
+
+                case 'retrait':
+                    title.innerHTML = '<i class="fas fa-arrow-up"></i> Retrait';
+                    content.innerHTML = `
+                        <div class="form-group">
+                            <label>Montant (F CFA)</label>
+                            <div class="input-icon">
+                                <i class="fas fa-coins"></i>
+                                <input type="number" id="montantRetrait" min="100" value="5000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <div class="input-icon">
+                                <i class="fas fa-pen"></i>
+                                <input type="text" id="descRetrait" placeholder="Ex: Retrait DAB">
+                            </div>
+                        </div>
+                        <button class="btn-primary" id="execRetrait"><i class="fas fa-check"></i> Effectuer le retrait</button>
+                    `;
+
+                    document.getElementById('execRetrait').addEventListener('click', () => {
+                        afficherPinOverlay((valide) => {
+                            if (valide) {
+                                const montant = parseFloat(document.getElementById('montantRetrait').value);
+                                const desc = document.getElementById('descRetrait').value || 'Retrait';
+                                const res = compte.effectuerRetrait(montant, desc);
+                                if (res.ok) {
+                                    user.transactions.unshift(res.transaction);
+                                    user.ajouterNotification(`Retrait de ${montant} F CFA effectué`, 'success');
+                                    afficherNotification(`Retrait de ${montant} F CFA réussi`, 'success');
+                                    miseAJourUI();
+                                } else {
+                                    afficherNotification(res.msg, 'error');
+                                }
+                            }
+                        });
+                    });
+                    break;
+
+                case 'virement':
+                    title.innerHTML = '<i class="fas fa-exchange-alt"></i> Virement';
+                    
+                    const autresComptes = user.comptes.filter((c, i) => i !== user.compteActifIndex);
+                    const autresUsers = utilisateurs.filter(u => u.email !== user.email);
+                    
+                    let options = '<option value="">Sélectionner un bénéficiaire</option>';
+                    
+                    autresComptes.forEach((c, idx) => {
+                        options += `<option value="same_${idx}">${c.code} (${c.type}) - Mes comptes</option>`;
+                    });
+                    
+                    autresUsers.forEach((u, idx) => {
+                        if (u.comptes.length > 0) {
+                            options += `<option value="other_${idx}_0">${u.prenom} ${u.nom} - ${u.comptes[0].code}</option>`;
+                        }
+                    });
+
+                    content.innerHTML = `
+                        <div class="form-group">
+                            <label>Bénéficiaire</label>
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                                <select id="beneficiaireVirement">${options}</select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Montant</label>
+                            <div class="input-icon">
+                                <i class="fas fa-coins"></i>
+                                <input type="number" id="montantVirement" min="100" value="10000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Motif</label>
+                            <div class="input-icon">
+                                <i class="fas fa-pen"></i>
+                                <input type="text" id="motifVirement" value="Virement SunuBank">
+                            </div>
+                        </div>
+                        <button class="btn-primary" id="execVirement"><i class="fas fa-paper-plane"></i> Effectuer le virement</button>
+                    `;
+
+                    document.getElementById('execVirement').addEventListener('click', () => {
+                        afficherPinOverlay((valide) => {
+                            if (valide) {
+                                const benef = document.getElementById('beneficiaireVirement').value;
+                                const montant = parseFloat(document.getElementById('montantVirement').value);
+                                const motif = document.getElementById('motifVirement').value;
+
+                                if (!benef) {
+                                    afficherNotification('Veuillez sélectionner un bénéficiaire', 'error');
+                                    return;
+                                }
+
+                                if (montant > compte.solde) {
+                                    afficherNotification('Solde insuffisant', 'error');
+                                    return;
+                                }
+
+                                let compteDest = null;
+                                if (benef.startsWith('same_')) {
+                                    const idx = parseInt(benef.split('_')[1]);
+                                    compteDest = user.comptes[idx];
+                                } else if (benef.startsWith('other_')) {
+                                    const parts = benef.split('_');
+                                    const userIdx = parseInt(parts[1]);
+                                    compteDest = autresUsers[userIdx].comptes[0];
+                                }
+
+                                if (compteDest) {
+                                    const retrait = compte.effectuerRetrait(montant, `Virement vers ${compteDest.code}`);
+                                    const depot = compteDest.effectuerDepot(montant, `Virement de ${compte.code}`);
+                                    
+                                    const transVirement = new Transaction('virement', montant, motif, compte, compteDest);
+                                    user.transactions.unshift(transVirement);
+                                    
+                                    user.ajouterNotification(`Virement de ${montant} F CFA vers ${compteDest.code} effectué`, 'success');
+                                    afficherNotification(`Virement de ${montant} F CFA réussi`, 'success');
+                                    miseAJourUI();
+                                }
+                            }
+                        });
+                    });
+                    break;
+
+                case 'carte':
+                    title.innerHTML = '<i class="fas fa-credit-card"></i> Carte virtuelle';
+                    
+                    if (!compte.carteVirtuelle) {
+                        content.innerHTML = `
+                            <p style="margin-bottom: 16px;">Vous n'avez pas encore de carte virtuelle.</p>
+                            <button class="btn-primary" id="creerCarte"><i class="fas fa-plus"></i> Créer une carte</button>
+                        `;
+                        
+                        document.getElementById('creerCarte').addEventListener('click', () => {
+                            const res = compte.creerCarte();
+                            if (res.ok) {
+                                user.ajouterNotification('Carte virtuelle créée', 'success');
+                                afficherNotification('Carte virtuelle créée', 'success');
+                                miseAJourUI();
+                            }
+                        });
+                    } else {
+                        const carte = compte.carteVirtuelle;
+                        content.innerHTML = `
+                            <div class="virtual-card" style="background: linear-gradient(145deg, #1a2a1a, #0a1a0a); padding: 20px; border-radius: 24px; color: white; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                                    <i class="fas fa-wifi" style="transform: rotate(90deg);"></i>
+                                    <span>${carte.actif ? 'ACTIVE' : 'BLOQUÉE'}</span>
+                                </div>
+                                <div style="font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 20px;">
+                                    •••• •••• •••• ${carte.numero.slice(-4)}
+                                </div>
+                                <div style="display: flex; gap: 30px;">
+                                    <div><small>EXP</small><br><strong>${carte.dateExpiration}</strong></div>
+                                    <div><small>CVV</small><br><strong>•••</strong></div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                                <button class="btn-primary" id="voirCarte" style="flex:1;"><i class="fas fa-eye"></i> Voir</button>
+                                <button class="btn-secondary" id="toggleCarte" style="flex:1;">
+                                    <i class="fas fa-${carte.actif ? 'ban' : 'check'}"></i> ${carte.actif ? 'Bloquer' : 'Débloquer'}
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label>Plafond (F CFA)</label>
+                                <input type="range" min="10000" max="1000000" step="10000" value="${carte.plafond}" id="plafondRange" style="width: 100%;">
+                                <div style="text-align: center; margin-top: 8px; font-weight: 700;" id="plafondValue">${carte.plafond.toLocaleString()} F</div>
+                            </div>
+                        `;
+
+                        document.getElementById('voirCarte').addEventListener('click', () => {
+                            afficherPinOverlay((valide) => {
+                                if (valide) {
+                                    alert(`Numéro: ${carte.numero}\nExp: ${carte.dateExpiration}\nCVV: ${carte.cvv}`);
+                                }
+                            });
+                        });
+
+                        document.getElementById('toggleCarte').addEventListener('click', () => {
+                            carte.actif = !carte.actif;
+                            user.ajouterNotification(`Carte ${carte.actif ? 'débloquée' : 'bloquée'}`, 'info');
+                            afficherNotification(`Carte ${carte.actif ? 'débloquée' : 'bloquée'}`, 'success');
+                            miseAJourUI();
+                        });
+
+                        document.getElementById('plafondRange').addEventListener('input', (e) => {
+                            const val = parseInt(e.target.value);
+                            document.getElementById('plafondValue').textContent = val.toLocaleString() + ' F';
+                            carte.plafond = val;
+                        });
+                    }
+                    break;
+
+                case 'historique':
+                    title.innerHTML = '<i class="fas fa-history"></i> Historique des transactions';
+                    
+                    const toutesTransacs = [...user.transactions, ...compte.transactions]
+                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .slice(0, 20);
+                    
+                    if (toutesTransacs.length === 0) {
+                        content.innerHTML = '<p style="text-align: center;">Aucune transaction</p>';
+                    } else {
+                        let html = '<div class="transactions-list">';
+                        toutesTransacs.forEach(t => {
+                            html += `
+                                <div class="transaction-row ${t.type}">
+                                    <div class="transaction-icon">
+                                        <i class="fas fa-${t.type === 'depot' ? 'arrow-down' : t.type === 'retrait' ? 'arrow-up' : 'exchange-alt'}"></i>
+                                    </div>
+                                    <div class="transaction-info">
+                                        <div class="transaction-type">${t.type.charAt(0).toUpperCase() + t.type.slice(1)}</div>
+                                        <div class="transaction-date">${t.date}</div>
+                                        ${t.description ? `<div style="font-size: 0.7rem;">${t.description}</div>` : ''}
+                                    </div>
+                                    <div class="transaction-amount ${t.type === 'depot' ? 'positif' : 'negatif'}">
+                                        ${t.type === 'depot' ? '+' : '-'} ${t.montant.toLocaleString()} F
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                        content.innerHTML = html;
+                    }
+                    break;
+
+                case 'budget':
+                    title.innerHTML = '<i class="fas fa-chart-pie"></i> Budget mensuel';
+                    
+                    let budgetHtml = '<div>';
+                    user.budgets.forEach(budget => {
+                        const pourcent = budget.pourcentage;
+                        let color = 'var(--vert-sn)';
+                        if (pourcent > 90) color = 'var(--rouge-sn)';
+                        else if (pourcent > 70) color = 'var(--jaune-sn)';
+                        
+                        budgetHtml += `
+                            <div style="margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <span>${budget.categorie}</span>
+                                    <span>${budget.depenses.toLocaleString()} / ${budget.montantMax.toLocaleString()} F</span>
+                                </div>
+                                <div style="height: 8px; background: var(--gris-moyen); border-radius: 4px;">
+                                    <div style="width: ${Math.min(pourcent, 100)}%; height: 100%; background: ${color}; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    budgetHtml += '</div>';
+                    
+                    budgetHtml += `
+                        <div class="form-group">
+                            <label>Catégorie</label>
+                            <div class="input-icon">
+                                <i class="fas fa-tag"></i>
+                                <select id="categorieDepense">
+                                    <option value="Alimentation">Alimentation</option>
+                                    <option value="Transport">Transport</option>
+                                    <option value="Loisirs">Loisirs</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Montant</label>
+                            <div class="input-icon">
+                                <i class="fas fa-coins"></i>
+                                <input type="number" id="montantDepense" min="100" value="5000">
+                            </div>
+                        </div>
+                        <button class="btn-primary" id="ajouterDepense"><i class="fas fa-plus"></i> Ajouter une dépense</button>
+                    `;
+                    
+                    content.innerHTML = budgetHtml;
+
+                    document.getElementById('ajouterDepense').addEventListener('click', () => {
+                        const cat = document.getElementById('categorieDepense').value;
+                        const montant = parseFloat(document.getElementById('montantDepense').value);
+                        
+                        const budget = user.budgets.find(b => b.categorie === cat);
+                        if (budget) {
+                            budget.depenses += montant;
+                            const res = compte.effectuerRetrait(montant, `Dépense ${cat}`);
+                            if (res.ok) {
+                                user.transactions.unshift(res.transaction);
+                                user.ajouterNotification(`Dépense ${cat} enregistrée`, 'info');
+                                afficherNotification(`Dépense de ${montant} F CFA ajoutée`, 'success');
+                                miseAJourUI();
+                            }
+                        }
+                    });
+                    break;
+
+                case 'chat':
+                    title.innerHTML = '<i class="fas fa-headset"></i> Support client';
+                    
+                    let messagesHtml = '<div style="max-height: 250px; overflow-y: auto; margin-bottom: 16px;" id="chatMessages">';
+                    chatMessages.forEach(msg => {
+                        messagesHtml += `
+                            <div style="display: flex; ${msg.sender === 'user' ? 'justify-content: flex-end;' : ''} margin-bottom: 8px;">
+                                <div style="max-width: 80%; padding: 12px; border-radius: 20px; background: ${msg.sender === 'user' ? 'var(--vert-sn)' : 'var(--gris-moyen)'}; color: ${msg.sender === 'user' ? 'white' : 'var(--gris-fonce)'};">
+                                    ${msg.text}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    messagesHtml += '</div>';
+                    
+                    messagesHtml += `
+                        <div style="display: flex; gap: 8px;">
+                            <div class="input-icon" style="flex:1;">
+                                <i class="fas fa-comment"></i>
+                                <input type="text" id="chatInput" placeholder="Votre message...">
+                            </div>
+                            <button class="btn-primary" id="sendChat" style="width: auto; padding: 0 20px;"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    `;
+                    
+                    content.innerHTML = messagesHtml;
+
+                    document.getElementById('sendChat').addEventListener('click', () => {
+                        const input = document.getElementById('chatInput');
+                        const msg = input.value.trim();
+                        if (msg) {
+                            chatMessages.push({ sender: 'user', text: msg });
+                            
+                            setTimeout(() => {
+                                chatMessages.push({ 
+                                    sender: 'bot', 
+                                    text: 'Merci pour votre message. Un conseiller vous répondra dans les plus brefs délais.'
+                                });
+                                handleAction('chat');
+                            }, 1000);
+                            
+                            input.value = '';
+                            handleAction('chat');
+                        }
+                    });
+                    break;
+
+                case 'securite':
+                    title.innerHTML = '<i class="fas fa-shield-alt"></i> Sécurité';
+                    
+                    content.innerHTML = `
+                        <div class="form-group">
+                            <label>Ancien code PIN</label>
+                            <div class="input-icon">
+                                <i class="fas fa-key"></i>
+                                <input type="password" id="ancienPIN" maxlength="4">
+                                <i class="fas fa-eye password-toggle" id="toggleAncienPIN"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nouveau code PIN</label>
+                            <div class="input-icon">
+                                <i class="fas fa-key"></i>
+                                <input type="password" id="nouveauPIN" maxlength="4">
+                                <i class="fas fa-eye password-toggle" id="toggleNouveauPIN"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Biométrie</label>
+                            <div class="input-icon">
+                                <i class="fas fa-fingerprint"></i>
+                                <select id="bioSelect">
+                                    <option value="true" ${user.biometrieActivee ? 'selected' : ''}>Activée</option>
+                                    <option value="false" ${!user.biometrieActivee ? 'selected' : ''}>Désactivée</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn-primary" id="updateSecurite"><i class="fas fa-save"></i> Mettre à jour</button>
+                    `;
+
+                    document.getElementById('toggleAncienPIN')?.addEventListener('click', function() {
+                        const input = document.getElementById('ancienPIN');
+                        input.type = input.type === 'password' ? 'text' : 'password';
+                        this.className = input.type === 'password' ? 'fas fa-eye password-toggle' : 'fas fa-eye-slash password-toggle';
+                    });
+
+                    document.getElementById('toggleNouveauPIN')?.addEventListener('click', function() {
+                        const input = document.getElementById('nouveauPIN');
+                        input.type = input.type === 'password' ? 'text' : 'password';
+                        this.className = input.type === 'password' ? 'fas fa-eye password-toggle' : 'fas fa-eye-slash password-toggle';
+                    });
+
+                    document.getElementById('updateSecurite').addEventListener('click', () => {
+                        const ancien = document.getElementById('ancienPIN').value;
+                        const nouveau = document.getElementById('nouveauPIN').value;
+                        const bio = document.getElementById('bioSelect').value === 'true';
+
+                        if (ancien && ancien !== user.codePIN) {
+                            afficherNotification('Ancien PIN incorrect', 'error');
+                            return;
+                        }
+
+                        if (nouveau) {
+                            if (!/^\d{4}$/.test(nouveau)) {
+                                afficherNotification('Le PIN doit être 4 chiffres', 'error');
+                                return;
+                            }
+                            user.codePIN = nouveau;
+                        }
+
+                        user.biometrieActivee = bio;
+                        user.ajouterNotification('Paramètres de sécurité mis à jour', 'success');
+                        afficherNotification('Sécurité mise à jour', 'success');
+                        miseAJourUI();
+                    });
+                    break;
+            }
+        }
+
+        // =============== INITIALISATION ===============
+        function initDemo() {
+            const admin = new Utilisateur('Admin', 'SunuBank', 'admin@sunubank.sn', '123456');
+            admin.codePIN = '0000';
+            admin.biometrieActivee = true;
+            
+            const compte1 = new Compte('SN001', 250000, 'Courant', true);
+            const compte2 = new Compte('SN002', 500000, 'Épargne', true);
+            
+            compte1.effectuerDepot(100000, 'Premier dépôt');
+            compte1.effectuerRetrait(25000, 'Retrait DAB');
+            
+            admin.ajouterCompte(compte1);
+            admin.ajouterCompte(compte2);
+            
+            admin.transactions = [...compte1.transactions];
+            admin.ajouterNotification('Bienvenue sur SunuBank', 'success');
+            
+            const user2 = new Utilisateur('Fatou', 'Diop', 'fatou@demo.sn', '123456');
+            user2.codePIN = '1234';
+            user2.ajouterCompte(new Compte('SN003', 150000, 'Courant', true));
+            
+            utilisateurs.push(admin);
+            utilisateurs.push(user2);
+        }
+
+        initDemo();
+        miseAJourUI();
+    })();
+</script>
+</body>
+</html>
